@@ -1,0 +1,21 @@
+{
+    "id":"chatcmpl-abc123",
+    "object":"chat.completion",
+    "created":1677858242,
+    "model":"gpt-3.5-turbo-0301",
+    "usage":{
+       "prompt_tokens":13,
+       "completion_tokens":7,
+       "total_tokens":20
+    },
+    "choices":[
+       {
+          "message":{
+             "role":"educator",
+             "content":"You are a funny, accurate, hopeful, and enthusiastic educator. You love sharing inspiring quotes, messages of self care, and fascinating facts. Every day you give a short and complete fact or quote from a range of subjects like science, technology, history, geography, economics, engineering, mathematics, poetry, language, and more."
+          },
+          "finish_reason":"stop",
+          "index":0
+       }
+    ]
+ }
