@@ -11,7 +11,7 @@ from adafruit_magtag.magtag import MagTag
  
 magtag = MagTag()
 
-#Format  text 
+#Format text display on MagTag 
 magtag.add_text(
     text_scale=1,
     text_wrap=47,
@@ -19,9 +19,12 @@ magtag.add_text(
     text_position=(10, 10),
     text_anchor_point=(0, 0),
 )
-#define response holder
+# Define response holder
 response = ""
+# Set the model prompt
+context = "You are a funny, accurate, hopeful, and enthusiastic educator. You love sharing inspiring quotes, messages of self care, and fascinating facts. Every day you give a short and complete fact or quote from a range of subjects like science, technology, history, geography, economics, engineering, mathematics, poetry, language, and more. Today you share a new uplifting or funny fact that is different than your other previous facts"
 
+# Load in the OpenAI API key
 try:
     from secrets import secrets
     print("Sucessfully imported secrets!")
@@ -48,44 +51,41 @@ pool = socketpool.SocketPool(wifi.radio)
 
 def get_response(prompt):
     """
-    Returns a request to OpenAI API and returns the response
+    Sends a request to OpenAI API and returns the response
     """
     https = requests.Session(pool, ssl.create_default_context())
-    with open('./requestbody.json') as f:
-        data = json.load(f)
-
+    #Set up OpenAI API authentication
     headers = {'Authorization': f'Bearer {api_key}'}
-    
-    data = {'model': 'text-davinci-002', 'prompt': prompt, 'max_tokens': 120, 'temperature': 0.8, 'top_p': 1, 'frequency_penalty': 2, 'presence_penalty': 0}
 
+    #Set up the model request parameters
+    data = {'model': 'text-davinci-002', 'prompt': prompt, 'max_tokens': 120, 'temperature': 0.8, 'frequency_penalty': 2, 'presence_penalty': 0}
+    
+    # Call the OpenAI model API
     response = https.post(openai_api_url, json=data, headers=headers)
+    # Set the model response as json format
     json_resp = response.json()
     try:
-        #parse json response
-        response = json_resp["choices"][0]["text"]
-            
+        # Parse json response
+        response = json_resp["choices"][0]["text"]    
     except Exception:
-        print("error in getting response")
-
+        print("Error in getting response...")
     return response
 
 while True:
     try:
         # Print today's fun fact!
         prompt = "Today you share a new uplifting or funny fact that is different than your other previous facts."
-        #Need to add response to new prompt to get a new response
-        response = get_response(prompt + response)
+
+        # Add context, prompt, and previous response to new prompt (to get a new response)
+        response = get_response(context + prompt + response)
+        # Print response!
         magtag.set_text("ADA: \n{}".format(response))
         magtag.refresh()
 
         # Put the board to sleep for 24 hrs 
         time.sleep(2)
         print("Sleeping")
-        # TESTING PURPOSES ONLY TO BE REMOVED ------------------------------------------------------------------
-        PAUSE = alarm.time.TimeAlarm(monotonic_time=time.monotonic() + 60) #new fact every min, 
-        
-        # BRING BACK THE FOLLOWING LINE ------------------------------------------------------------------
-        #PAUSE = alarm.time.TimeAlarm(monotonic_time=time.monotonic() + 60 * 60 * 24)
+        PAUSE = alarm.time.TimeAlarm(monotonic_time=time.monotonic() + 60 * 60 * 24)
         alarm.exit_and_deep_sleep_until_alarms(PAUSE)
 
     except (ValueError, RuntimeError) as e:
