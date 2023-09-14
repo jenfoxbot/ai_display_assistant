@@ -10,7 +10,6 @@ import random
 import alarm
 from adafruit_magtag.magtag import MagTag
 from context import context
-#import check-answer.py as check-answer
 
 magtag = MagTag()
 magtag.peripherals.neopixel_disable = False
@@ -46,7 +45,6 @@ api_key = secrets["OPENAI_API_KEY"]
 openai_api_url = "https://api.openai.com/v1/completions"
 
 # Connect to WiFi
-# Connect to WiFi
 print("Available WiFi networks:")
 for network in wifi.radio.start_scanning_networks():
     print("\t%s\t\tRSSI: %d\tChannel: %d" % (str(network.ssid, "utf-8"),
@@ -59,24 +57,6 @@ print("Connected to %s!"%secrets["ssid"])
 print("My IP address is", wifi.radio.ipv4_address)
 
 pool = socketpool.SocketPool(wifi.radio)
-# def connect_to_wifi():
-#     #while not wifi.radio.connected:
-#     print("Available WiFi networks:")
-#     for network in wifi.radio.start_scanning_networks():
-#         print("\t%s\t\tRSSI: %d\tChannel: %d" % (str(network.ssid, "utf-8"),
-#                 network.rssi, network.channel))
-#     wifi.radio.stop_scanning_networks()
-#     try:
-#         print("Connecting to %s"%secrets["ssid"])
-#         wifi.radio.connect(secrets["ssid"], secrets["password"])
-#     except Exception:
-#         print("Error in connecting...")
-
-#     pool = socketpool.SocketPool(wifi.radio)    
-    
-#     print("Connected to %s!"%secrets["ssid"])
-#     print("My IP address is", wifi.radio.ipv4_address)
-#     return pool
     
 
 def get_response(prompt, answer):
@@ -183,7 +163,6 @@ def check_answer(answer, win_state):
     return win_state 
     
 while True:
-    #pool = connect_to_wifi()
     try:
         win_state = False
         # pick a word to generate a clue
