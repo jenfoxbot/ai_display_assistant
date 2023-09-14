@@ -171,7 +171,6 @@ while True:
         response = get_response(context + response, answer)
         # Print the clue!
         magtag.set_text("ADA: {}".format(response))
-        #magtag.set_text("ADA: {} \n {}\".format(response))
         while not win_state: 
             win_state = check_answer(answer, win_state)
         start_new_game() 
